@@ -7,3 +7,8 @@ midfield players and one attacking midfielder.
 Load the html in a web browser and print on an 8.5 x 11 landscape.
 Currently you have to hand edit the html to put your roster in.
 I'll probably implement a CSV import later.
+
+Fill out the roster table with position numbers, X for sitting, or a - for out.
+Then print.
+
+[example.png]
