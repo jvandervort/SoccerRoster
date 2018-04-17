@@ -11,4 +11,4 @@ I'll probably implement a CSV import later.
 Fill out the roster table with position numbers, X for sitting, or a - for out.
 Then print.
 
-[example.png]
+![example.png][]
