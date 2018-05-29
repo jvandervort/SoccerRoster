@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>Roster App</title>
+<title>HTML Roster</title>
 <style type="text/css">
 html {
 	font-family: Arial, Helvetica, sans-serif;
@@ -9,12 +9,14 @@ html {
 }
 div.field {
 	float:right;
+	margin:0;
 }
 #roster {
 	float:left;
 	clear:both;
 	border-collapse: collapse;
-	margin-top: 30px;
+	margin: 20px 0 0 0;
+	width: 420px;
 }
 td {
 	border: 1px solid black;
@@ -22,10 +24,21 @@ td {
 	text-align:center;
 	padding: 5px;
 }
-td.player {
-	width: 150px;
+td.numberName {
+	width: 7em;
 }
-tr.remaining td {
+div.player {
+	float:left;
+	font-weight:bold;
+}
+div.number {
+	float:left;
+	padding-right: 5px;
+	text-align: right;
+	width: 1.7em;
+	font-weight:normal;
+}
+#remaining td {
 	font-family: courier new;
 	text-align:center;
 }
@@ -37,38 +50,164 @@ div.date {
 	float:right;
 	font-size: 1.3em;
 }
+.warning {
+	background-color: #ffff00;
+}
+.scratch {
+	background-color: #B0B0B0;
+}
+.sit {
+	background-color: #F8F8F8;
+}
+#remaining {
+	height: 5em;
+}
+#goals-us, #goals-them {
+	display: none;
+	height: 5em;
+}
 @media print {    
-    tr.remaining {
+    #remaining {
         display: none !important;
     }
-}
-</style>
-<script type="text/javascript">
-function init() {
-	registerKeyPress();
-	updateColumn('q1');
-	updateColumn('q2');
-	updateColumn('q3');
-	updateColumn('q4');
-	clearSvgNames();
-}
-
-function registerKeyPress() {
-	var elements = document.getElementsByTagName("td");
-	for(var i = 0; i < elements.length; i++) {
-		if (elements[i].className != 'player') {
-			elements[i].onkeyup = function(event){
-				updateColumn(this.className);
-				updateSvgNames();
-			}
-			elements[i].onkeydown = function(event){
-				removeSvgNames();
-			}
-		}
+	#goals-us, #goals-them {
+		display: table-row !important;
 	}
 }
 
-function updateSvgNames() {
+</style>
+<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+    console.log( "ready!" );
+
+	var teamRoster = [
+		{"number":31, "name":"Sam B"},
+		{"number":8, "name":"Camden"},
+		{"number":12, "name":"Liam"},
+		{"number":4, "name":"Sam F"},
+		{"number":5, "name":"Cooper"},
+		{"number":16, "name":"Langston"},
+		{"number":29, "name":"James H"},
+		{"number":7, "name":"Ryan"},
+		{"number":15, "name":"Charlie"},
+		{"number":10, "name":"Ian"},
+		{"number":3, "name":"James O"},
+		{"number":23, "name":"Anthony"},
+		{"number":19, "name":"Ethan"},
+		{"number":9, "name":"Sean"},
+		{"number":6, "name":"Ben"},
+		{"number":18, "name":"Owen"}
+	];
+	teamRoster.sort(SortByNumber);
+	
+	
+	loadRoster();
+	registerKeyPress();
+	clearSvgNames();
+	
+	function loadRoster() {
+		$.each(teamRoster, function(index, p) {
+			$('#remaining').before('<tr><td class="numberName"><div class="number">#' + p.number + '</div><div class="player">' + p.name + '</div></td><td class="qtr q1" contenteditable></td><td class="qtr q2" contenteditable></td><td class="qtr q3" contenteditable></td><td class="qtr q4" contenteditable></td></tr>');
+		});
+	}
+
+	function registerKeyPress() {
+		$('#roster td.qtr').each(function(index) {
+			$(this).keyup(function() {
+				updateCellColor($(this));
+				updateRemainingInQtr($(this));
+				updateSvgNames($(this));
+			});
+		});
+	}
+	
+	function updateCellColor(qtr) {
+		var qtrNum;
+		if (qtr.is('.q1')) {
+			qtrNum = 1;
+		} else if (qtr.is('.q2')) {
+			qtrNum = 2;
+		} else if (qtr.is('.q3')) {
+			qtrNum = 3;
+		} else if (qtr.is('.q4')) {
+			qtrNum = 4;
+		}
+	
+		var seen = {};
+		$('#roster td.q' + qtrNum).each(function(index) {
+			var cur = $(this).html();
+			if (seen[cur] == undefined) {
+				seen[cur] = 1;
+			}
+			else {
+				seen[cur] = seen[cur] + 1;
+			}
+		});
+		
+		$('#roster td.q' + qtrNum).each(function(index) {
+			$(this).removeClass("warning scratch sit");
+			var cur = $(this).html();
+			if (cur > 0 && cur < 12) {
+				if (seen[cur] > 1) {
+					$(this).addClass("warning");
+				}
+				else {
+					$(this).removeClass("warning");
+				}
+			}
+			else {
+				if (cur == 'X' || cur == 'x') {
+					$(this).addClass("sit");
+				} 
+				else if (cur == '-') {
+					$(this).addClass("scratch");
+				}
+				else {
+					$(this).addClass("warning");
+				}
+				
+			}
+		});
+		
+	}
+	
+	function updateRemainingInQtr(qtr) {
+		var qtrNum;
+		if (qtr.is('.q1')) {
+			qtrNum = 1;
+		} else if (qtr.is('.q2')) {
+			qtrNum = 2;
+		} else if (qtr.is('.q3')) {
+			qtrNum = 3;
+		} else if (qtr.is('.q4')) {
+			qtrNum = 4;
+		}
+		
+		var pos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+		
+		$('#roster td.q' + qtrNum).each(function(index) {
+			var ele = $(this);
+			var q = ele.html();
+			pos = $.grep(pos, function(value) {
+				return value != q;
+			});
+		});
+		
+		$('#remaining td.q' + qtrNum + 'Remaining').html(pos.join(' '));
+	}
+});
+
+function SortByName(a, b){
+  var aName = a.name.toLowerCase();
+  var bName = b.name.toLowerCase(); 
+  return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+}
+function SortByNumber(a, b){
+  return ((a.number < b.number) ? -1 : ((a.number > b.number) ? 1 : 0));
+}
+
+function updateSvgNames(qtr) {
 	//var svgObject = document.getElementById('svg4910');
 	//var svgDoc = svgObject.contentDocument;
 	//var svgItem = document.getElementById("rect4738");
@@ -83,88 +222,46 @@ function updateSvgNames() {
 	//text.textContent = 'NO WAY MAN';
 	//svgObject.appendChild(text);
 	
-	// Check qtr column for used positions
-	var roster = document.getElementById("roster");
-	var trs = document.getElementById("roster").getElementsByTagName('tr');
-	for(var i = 0; i < trs.length; i++) {
-		var tr = trs[i];
-		if (tr.className == 'remaining') {
-			continue;
-		}
-		var player = tr.getElementsByTagName("td")[0].innerHTML;
-		for (var j=1; j<5; j++) {
-			var pos = tr.getElementsByTagName("td")[j].innerHTML;
-			var id = "q" + j + "-p" + pos;
-			console.log("pos = " + pos + ", id=" + id);
-			var slot = document.getElementById(id);
-			if (slot != undefined) {
-				slot.textContent = player;
-			}
-		}
-	}
-}
-
-function removeSvgNames() {
-
-	for (var q=1; q<5; q++) {
-		for (var p=1; p<12; p++) {
-			var id = "q" + q + "-p" + p;
-			var slot = document.getElementById(id);
-			if (slot != undefined) {
-				slot.textContent = '';
-			}
-		}
-	}
-}
-
-function updateColumn(tdClass) {
-	var seen = {};
+	var qtrNum;
+	if (qtr.is('.q1')) {
+		qtrNum = 1;
+	} else if (qtr.is('.q2')) {
+		qtrNum = 2;
+	} else if (qtr.is('.q3')) {
+		qtrNum = 3;
+	} else if (qtr.is('.q4')) {
+		qtrNum = 4;
+	}	
 	
 	// Check qtr column for used positions
-	var elements = document.getElementsByClassName(tdClass);
-	for(var i = 0; i < elements.length; i++) {
-		var ele = elements[i];
-		var val = ele.textContent.trim();
-		if (seen[val] == undefined) {
-			seen[val] = 1;
-		} else {
-			seen[val] += 1;
-		}
-	}
-	
-	// warn if already qtr already has position
-	for(var i = 0; i < elements.length; i++) {
-		var ele = elements[i];
-		var val = ele.textContent.trim();
-		if (val == 'x' || val == '\u00A0' || val == String.fromCharCode(160)) {
-			ele.textContent = 'X';
-			val = 'X';
+	var $roster = $('#roster');
+	$roster.find('tr').each(function(index) {
+		var $tr = $(this);
+		if ($tr.is('.remaining')) {
+			return true;
 		}
 		
-		ele.style.backgroundColor = "";
-		if (val == 'X') {
-			ele.style.backgroundColor = "#F8F8F8";
-		} else if (val == '-') {
-			ele.style.backgroundColor = "#B0B0B0";
-		} else if (seen[val] > 1 || val < 1 || val > 11 || val == String.fromCharCode(160)) {
-			ele.style.backgroundColor = "yellow";
-		} else {
-			//ele.style.backgroundColor = "green";
-		}
-		
-	}
-	
-	// Update remaining positions in qtr
-	var left = [];
-	for(var j = 1; j < 12; j++) {
-		if (seen[j] == undefined) {
-			left.push(j);
-		}
-	}
-	var qRemaining = document.getElementsByClassName(tdClass + 'Remaining');
-	qRemaining[0].innerHTML = left.join(" ");
+		var $tdList = $tr.find('td.qtr');
+		$tdList.each(function(index) {
+			var td = $(this);
+			var pos = td.html();
+			var quarter = index + 1;
+			var player = td.parent().find('.player:first').html();
+			var id = "q" + quarter + "-p" + pos;
+			var slot = $('#' + id);
+			if (slot.length > 0) {
+				if (!td.is('.warning')) {
+					slot.html(player);
+				}
+				else {
+					slot.html('');
+				}
+			}
+		});
+	});
 }
 
+// Remove placeholder names
 function clearSvgNames() {
 	for (var i=1; i<12; i++) {
 		for (var j=1; j<5; j++) {
@@ -177,7 +274,7 @@ function clearSvgNames() {
 }
 </script>
 </head>
-<body onload="init()">
+<body>
 <div class="header">
 <div class="game" contenteditable>
 	Bainbridge Island FC White
@@ -186,124 +283,26 @@ function clearSvgNames() {
 	7/29 3pm
 </div>
 <table id="roster">
-<tr>
-	<td class="player">Ryan</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Sam</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Cooper</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Langston</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">James H</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Caiden</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Jake</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Guy</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Charlie</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">James O</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Anthony</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Ethan</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Sean</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Michael</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Owen</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr>
-	<td class="player">Will</td>
-	<td class="q1" contenteditable></td>
-	<td class="q2" contenteditable></td>
-	<td class="q3" contenteditable></td>
-	<td class="q4" contenteditable></td>
-</tr>
-<tr class="remaining">
+<tr id="remaining">
 	<th></th>
 	<td class="q1Remaining"></td>
 	<td class="q2Remaining"></td>
 	<td class="q3Remaining"></td>
 	<td class="q4Remaining"></td>
+</tr>
+<tr id="goals-us">
+	<th><span class="goals">Goals Us</span></th>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr id="goals-them">
+	<th><span class="goals">Goals Them</span></th>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
 </tr>
 </table>
 
