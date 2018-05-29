@@ -7,6 +7,27 @@ html {
 	font-family: Arial, Helvetica, sans-serif;
 	margin:0;
 }
+div.gameLabel {
+	float:left;
+	font-size: 0.7em;
+	padding: 6px 5px 0 0;
+}
+div.game {
+	float:left;
+	font-size: 1.3em;
+	font-size: 1.3em;
+}
+div.dateLabel {
+	float:right;
+	font-size: 0.7em;
+	padding: 6px 5px 0 0;
+}
+div.date {
+	float:right;
+	font-size: 1.3em;
+	padding-right: 5px;
+}
+
 div.field {
 	float:right;
 	margin:0;
@@ -41,14 +62,6 @@ div.number {
 #remaining td {
 	font-family: courier new;
 	text-align:center;
-}
-div.game {
-	float:left;
-	font-size: 1.3em;
-}
-div.date {
-	float:right;
-	font-size: 1.3em;
 }
 .warning {
 	background-color: #ffff00;
@@ -276,11 +289,14 @@ function clearSvgNames() {
 </head>
 <body>
 <div class="header">
-<div class="game" contenteditable>
-	Bainbridge Island FC White
-</div>
-<div class="date" contenteditable>
-	7/29 3pm
+	<div class="gameLabel">Opponent</div>
+	<div class="game" contenteditable>
+		Bainbridge Island FC White
+	</div>
+	<div class="date" contenteditable>
+		7/29 3pm
+	</div>
+	<div class="dateLabel">Date/Field</div>
 </div>
 <table id="roster">
 <tr id="remaining">
