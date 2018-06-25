@@ -66,11 +66,8 @@ div.number {
 .warning {
 	background-color: #ffff00;
 }
-.scratch {
-	background-color: #B0B0B0;
-}
 .sit {
-	background-color: #F8F8F8;
+	background-color: #e8e8e8;
 }
 #remaining {
 	height: 5em;
@@ -94,21 +91,23 @@ div.number {
 $( document ).ready(function() {
     console.log( "ready!" );
 
+	clearSvgNames();
+	
 	var teamRoster = [
 		{"number":31, "name":"Sam B"},
 		{"number":8, "name":"Camden"},
 		{"number":12, "name":"Liam"},
 		{"number":4, "name":"Sam F"},
 		{"number":5, "name":"Cooper"},
-		{"number":16, "name":"Langston"},
+		{"number":16, "name":"Langston", pos:[9,9,4]},
 		{"number":29, "name":"James H"},
 		{"number":7, "name":"Ryan"},
 		{"number":15, "name":"Charlie"},
 		{"number":10, "name":"Ian"},
 		{"number":3, "name":"James O"},
-		{"number":23, "name":"Anthony"},
+		{"number":37, "name":"Anthony"},
 		{"number":19, "name":"Ethan"},
-		{"number":9, "name":"Sean"},
+		{"number":9, "name":"Sean", pos:[10]},
 		{"number":6, "name":"Ben"},
 		{"number":18, "name":"Owen"}
 	];
@@ -117,11 +116,16 @@ $( document ).ready(function() {
 	
 	loadRoster();
 	registerKeyPress();
-	clearSvgNames();
 	
 	function loadRoster() {
 		$.each(teamRoster, function(index, p) {
-			$('#remaining').before('<tr><td class="numberName"><div class="number">#' + p.number + '</div><div class="player">' + p.name + '</div></td><td class="qtr q1" contenteditable></td><td class="qtr q2" contenteditable></td><td class="qtr q3" contenteditable></td><td class="qtr q4" contenteditable></td></tr>');
+			$('#remaining').before('<tr id="pid-' + p.number + '"><td class="numberName"><div class="number">#' + p.number + '</div><div class="player">' + p.name + '</div></td><td class="qtr q1" contenteditable></td><td class="qtr q2" contenteditable></td><td class="qtr q3" contenteditable></td><td class="qtr q4" contenteditable></td></tr>');
+			$.each(p.pos, function(index, pos) {
+				var qtr = $('#pid-' + p.number).find('.q' + (index+1));
+				qtr.html(pos);
+				updateRemainingInQtr(qtr);
+				updateSvgNames(qtr);
+			});
 		});
 	}
 
@@ -159,7 +163,8 @@ $( document ).ready(function() {
 		});
 		
 		$('#roster td.q' + qtrNum).each(function(index) {
-			$(this).removeClass("warning scratch sit");
+			console.log(qtrNum);
+			$(this).removeClass("warning sit");
 			var cur = $(this).html();
 			if (cur > 0 && cur < 12) {
 				if (seen[cur] > 1) {
@@ -170,16 +175,12 @@ $( document ).ready(function() {
 				}
 			}
 			else {
-				if (cur == 'X' || cur == 'x') {
+				if (cur == '-') {
 					$(this).addClass("sit");
-				} 
-				else if (cur == '-') {
-					$(this).addClass("scratch");
 				}
 				else {
 					$(this).addClass("warning");
 				}
-				
 			}
 		});
 		
