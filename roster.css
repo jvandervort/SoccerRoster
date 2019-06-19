@@ -1,7 +1,24 @@
-html {
-	font-family: Arial, Helvetica, sans-serif;
-	margin:0;
+body {
+	font-family: Arial,Helvetica,sans-serif;
+	margin: 20px;
 }
+
+div.roster-col {
+	display:inline-block;
+	width: 50%;
+	vertical-align:top;
+	margin: 20px 0 0 0;
+	padding:0;
+}
+
+div.field-col {
+	display:inline-block;
+	width:50%;
+	vertical-align:top;
+	margin:5px 0 0 0;
+	padding:0;
+}
+
 div.gameLabel {
 	float:left;
 	font-size: 0.7em;
@@ -23,45 +40,40 @@ div.dateLabel {
 	padding-right: 5px;
 }
 
-div.field {
-	float:right;
-	margin:0;
-}
-#roster-div {
-	float:left;
-	clear:both;
-	width: 420px;
-	margin: 20px 0 0 0;
-}
 #roster {
 	border-collapse: collapse;
 	margin:0;
 	padding:0;
 	font-size: 1.15em;
 }
-td {
+td.shift {
 	border: 1px solid black;
-	width: 65px;
+	min-width:20px;
 	text-align:center;
-	padding: 5px;
+	padding: 4px;
 }
 td.numberName {
-	width: 7em;
-}
-div.player {
-	float:left;
-	font-weight:bold;
+	width: 140px;
+	min-width: 140px;
+	text-align:left;
+	border: 1px solid black;
 }
 div.number {
-	float:left;
-	padding-right: 5px;
+	display:inline-block;
+	width: 40px;
 	text-align: right;
-	width: 1.7em;
 	font-weight:normal;
 }
+div.player {
+	display:inline-block;
+	font-weight:bold;
+	padding-left: 10px;
+}
 #remaining td {
-	font-family: courier new;
-	text-align:center;
+	font-size: 14px;
+	font-weight:bold;
+	text-align:left;
+	border: 1px solid black;
 }
 .warning {
 	background-color: #ffff00;
@@ -74,7 +86,11 @@ div.number {
 }
 #goals-us, #goals-them {
 	display: none;
-	height: 5em;
+	height: 4em;
+	text-align:center;
+}
+#goals-us td, #goals-them  td {
+	border: 1px solid black;	
 }
 @media print {    
     #remaining, #save, #clear {
