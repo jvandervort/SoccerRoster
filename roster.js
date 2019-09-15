@@ -2,7 +2,7 @@ $( document ).ready(function() {
     console.log( "ready!" );
 
 	//Global
-	var SHIFT_COUNT = 6;
+	var SHIFT_COUNT = 4;
 	var gameData = { "opponent" : "", "dateTimeField" : "", "roster" : [] };
 	var svgNS = "http://www.w3.org/2000/svg";
 	initPage();
@@ -45,14 +45,14 @@ $( document ).ready(function() {
 					{"number":9,  "name":"Sean", pos:[]},
 					{"number":10,  "name":"Jeiven", pos:[]},
 					{"number":34,  "name":"Duzi", pos:[]},
-					{"number":1, "name":"Michael", pos:[]},
+					{"number":1,   "name":"Michael", pos:[]},
 					{"number":42,  "name":"Gabe", pos:[]},
 					{"number":14,  "name":"Caleb", pos:[]},
 					{"number":29,  "name":"Tabito", pos:[]},
 					{"number":11,  "name":"Lucas", pos:[]},
-					{"number":41, "name":"Austin", pos:[]},
+					{"number":41,  "name":"Austin", pos:[]},
 					{"number":28,  "name":"Reece", pos:[]},
-					{"number":18, "name":"Owen", pos:[]}
+					{"number":18,  "name":"Owen", pos:[]}
 				]
 			}
 		}
@@ -227,7 +227,11 @@ $( document ).ready(function() {
 				pos = $.grep(pos, function(value) {
 					return value != assignedPos;
 				});
-				$('#remaining td.s' + j + 'Remaining').html(pos.join(' '));
+				var remain = $('#remaining td.s' + j + 'Remaining');
+				remain.html("");
+				$.each(pos, function (i, p) {
+					remain.append("<div>" + p + "</div>");
+				});					
 			});
 		}
 	}
