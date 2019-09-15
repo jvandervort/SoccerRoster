@@ -1,29 +1,9 @@
 body {
 	font-family: Arial,Helvetica,sans-serif;
-	margin: 20px;
+	margin: 10px;
 }
 
-div.roster-col {
-	display:inline-block;
-	width: 50%;
-	vertical-align:top;
-	margin: 20px 0 0 0;
-	padding:0;
-}
-
-div.field-col {
-	display:inline-block;
-	width:50%;
-	vertical-align:top;
-	margin:5px 0 0 0;
-	padding:0;
-}
-
-div.gameLabel {
-	float:left;
-	font-size: 0.7em;
-	padding: 6px 5px 0 0;
-}
+/* Header */
 #opponent {
 	float:left;
 	font-size: 1.3em;
@@ -40,6 +20,29 @@ div.dateLabel {
 	padding-right: 5px;
 }
 
+
+div.roster-col {
+	float:left;
+	width: 50%;
+	vertical-align:top;
+	margin: 20px 0 0 0;
+	padding:0;
+}
+
+div.field-col {
+	float:right;
+	width:50%;
+	vertical-align:top;
+	margin:2px 0 0 0;
+	padding:0;
+}
+
+div.gameLabel {
+	float:left;
+	font-size: 0.7em;
+	padding: 6px 5px 0 0;
+}
+
 #roster {
 	border-collapse: collapse;
 	margin:0;
@@ -50,12 +53,10 @@ td.shift {
 	border: 1px solid black;
 	min-width:20px;
 	text-align:center;
-	padding: 4px;
 }
 td.numberName {
 	width: 140px;
 	min-width: 140px;
-	text-align:left;
 	border: 1px solid black;
 }
 div.number {
@@ -63,18 +64,31 @@ div.number {
 	width: 40px;
 	text-align: right;
 	font-weight:normal;
+	padding: 4px;
 }
 div.player {
 	display:inline-block;
 	font-weight:bold;
 	padding-left: 10px;
+	padding: 4px;
 }
 #remaining td {
 	font-size: 14px;
 	font-weight:bold;
 	text-align:left;
-	border: 1px solid black;
+	border: none;
+	text-align: left;
+	vertical-align: top;
 }
+#remaining td div {
+	display:inline-block;
+	width: 1.5em;
+	text-align: center;
+	vertical-align: middle;
+	border:solid thin black;
+	padding:1px;
+}
+
 .warning {
 	background-color: #ffff00;
 }
