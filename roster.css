@@ -64,13 +64,13 @@ div.number {
 	width: 40px;
 	text-align: right;
 	font-weight:normal;
-	padding: 4px;
+	padding: 3px;
 }
 div.player {
 	display:inline-block;
 	font-weight:bold;
 	padding-left: 10px;
-	padding: 4px;
+	padding: 3px;
 }
 #remaining td {
 	font-size: 14px;

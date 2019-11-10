@@ -52,6 +52,7 @@ $( document ).ready(function() {
 					{"number":11,  "name":"Lucas", pos:[]},
 					{"number":41,  "name":"Austin", pos:[]},
 					{"number":28,  "name":"Reece", pos:[]},
+					{"number":37,  "name":"Anthony", pos:[]},
 					{"number":18,  "name":"Owen", pos:[]}
 				]
 			}
