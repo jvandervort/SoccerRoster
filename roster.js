@@ -3,7 +3,24 @@ $( document ).ready(function() {
 
 	//Global
 	var SHIFT_COUNT = 4;
+	var FORMATION = '451-def';
 	var gameData = { "opponent" : "", "dateTimeField" : "", "roster" : [] };
+	var formation = {
+		'442-diamond': [{}, {x:70.5,y:160}, 
+			{x:121.75,y:113}, {x:21.25,y:113}, {x:88.5,y:124.5}, {x:54,y:124.5},
+			{x:70,y:100}, {x:95,y:43} , {x:92,y:82}, {x:45,y:43}, {x:70,y:65}, {x:48,y:82}],
+		'442-flat': [{}, 
+			{x:70.5,y:160}, {x:121.75,y:113}, {x:21.25,y:113}, {x:88.5,y:124.5}, {x:54,y:124.5},
+			{x:53,y:80}, {x:88.5,y:43} , {x:123,y:80}, {x:54,y:43}, {x:88.5,y:80}, {x:18,y:80}],
+		'433-flat': [{}, {x:70.5,y:160}, {x:121.75,y:113}, {x:21.25,y:113}, {x:88.5,y:124.5}, {x:54,y:124.5},
+			{x:104,y:80}, {x:119.5,y:45} , {x:37,y:80}, {x:70.5,y:43}, {x:70.5,y:80}, {x:24.5,y:45}],
+		'433-attacking': [{}, {x:70.5,y:160}, {x:121.75,y:113}, {x:21.25,y:113}, {x:88.5,y:124.5}, {x:54,y:124.5},
+			{x:70.5,y:95}, {x:119.5,y:45} , {x:45.5,y:70}, {x:70.5,y:26.75}, {x:96.75,y:70}, {x:24.5,y:45}],
+		'433-def': [{}, {x:70.5,y:160}, {x:121.75,y:113}, {x:21.25,y:113}, {x:88.5,y:124.5}, {x:54,y:124.5},
+			{x:45.5,y:87.5}, {x:119.5,y:45}, {x:96.75,y:87.5}, {x:70.5,y:26.75}, {x:70.5,y:63}, {x:24.5,y:45}],
+		'451-def': [{}, {x:70.5,y:160}, {x:121.75,y:113}, {x:21.25,y:113}, {x:88.5,y:124.5}, {x:54,y:124.5},
+			{x:45.5,y:87.5}, {x:119.5,y:56.5}, {x:96.75,y:87.5}, {x:70.5,y:26.75}, {x:70.5,y:63}, {x:24.5,y:56.5}]
+ 	}
 	var svgNS = "http://www.w3.org/2000/svg";
 	initPage();
 	
@@ -14,6 +31,7 @@ $( document ).ready(function() {
 		loadFieldAndLocation();
 		renderRoster();
 		updateRemainingInShift();
+		drawSvgPos();
 		updateSvgNames();
 		updateAllCellColor();
 	}
@@ -40,7 +58,7 @@ $( document ).ready(function() {
 					{"number":12, "name":"Liam", pos:[]},
 					{"number":5,  "name":"Cooper", pos:[]},
 					{"number":16, "name":"Langston", pos:[]},
-					{"number":3,  "name":"James", pos:[]},
+					//{"number":3,  "name":"James", pos:[]},
 					{"number":19, "name":"Ethan", pos:[]},
 					{"number":9,  "name":"Sean", pos:[]},
 					{"number":10,  "name":"Jeiven", pos:[]},
@@ -255,7 +273,7 @@ $( document ).ready(function() {
 		$.each(gameData.roster, function(indexPlr, player) {
 			$.each(player.pos, function(indexPos, playerPos) {
 				//alert(player.name + " pos=" + playerPos);
-				var positionNum = document.getElementById("position-num" + playerPos);
+				var positionNum = document.getElementById("pos-" + playerPos);
 				if (positionNum) {
 					var cx = Number(positionNum.getAttributeNS(null,"cx"));
 					var cy = Number(positionNum.getAttributeNS(null,"cy"));
@@ -292,7 +310,7 @@ $( document ).ready(function() {
 					
 					var newLine = document.createElementNS(svgNS,"line");
 					newLine.setAttributeNS(null,"x1", cx);		
-					newLine.setAttributeNS(null,"y1", cy+5);				
+					newLine.setAttributeNS(null,"y1", cy+6);				
 					newLine.setAttributeNS(null,"x2", cx);		
 					newLine.setAttributeNS(null,"y2", cy+6 + SHIFT_COUNT*BOX_HEIGHT/2);	
 					newLine.setAttributeNS(null,"style", "stroke-width:0.5;stroke:rgb(0,0,0)");									
@@ -335,6 +353,46 @@ $( document ).ready(function() {
 	function clearAllSvgNames() {
 		$('#field-svg .player-name').remove();
 	}
+
+	function drawSvgPos() {
+		clearSvgPos();
+		var field = document.getElementById("field-svg");
+		$.each(formation[FORMATION], function(indexPos, point) {
+			if (indexPos > 0) {
+
+				var newGroup = document.createElementNS(svgNS,"g");
+				newGroup.setAttributeNS(null,"class","pos");
+				field.appendChild(newGroup);
+
+				var circ = document.createElementNS(svgNS,"ellipse");
+				circ.setAttributeNS(null,"rx", 5.5);		
+				circ.setAttributeNS(null,"ry", 5.5);				
+				circ.setAttributeNS(null,"cx", point.x);		
+				circ.setAttributeNS(null,"cy", point.y);				
+				circ.setAttributeNS(null,"style", "fill:#dddddd;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-opacity:1");
+				circ.setAttributeNS(null,"id","pos-" + indexPos);				
+				newGroup.appendChild(circ);
+
+				var newText = document.createElementNS(svgNS,"text");
+				if (indexPos < 10) {
+					newText.setAttributeNS(null,"x", point.x);		
+				} else {
+					newText.setAttributeNS(null,"x", point.x-0.5);		
+				}
+				newText.setAttributeNS(null,"y", point.y+3);				
+				newText.setAttributeNS(null,"font-size","8px");
+				newText.setAttributeNS(null,"text-anchor","middle");
+				newGroup.appendChild(newText);
+				var textNode = document.createTextNode(indexPos);
+				newText.appendChild(textNode);				
+			}
+		});
+	}
+
+	function clearSvgPos() {
+		$('#field-svg .pos').remove();
+	}
+
 	
 });
 
