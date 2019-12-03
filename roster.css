@@ -106,8 +106,11 @@ div.player {
 #goals-us td, #goals-them  td {
 	border: 1px solid black;	
 }
+.formation-picker {
+	margin-top: 1em;
+}
 @media print {    
-    #remaining, #save, #clear {
+    #remaining, #save, #clear, .formation-picker {
         display: none !important;
     }
 

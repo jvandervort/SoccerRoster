@@ -34,6 +34,7 @@ $( document ).ready(function() {
 		drawSvgPos();
 		updateSvgNames();
 		updateAllCellColor();
+		addFormations();
 	}
 	
 	function loadOpponent() {
@@ -393,6 +394,23 @@ $( document ).ready(function() {
 		$('#field-svg .pos').remove();
 	}
 
+	function addFormations() {
+		var select = $('#formation');
+		$.each(formation, function(key, value) {
+			var opt = new Option(key, key);
+			select.append(opt);
+			if (key == FORMATION) {
+				opt.selected = true;
+			}
+		});
+		select.sel
+
+		select.change(function() {
+			FORMATION = $(this).children("option:selected").val();
+			drawSvgPos();
+			updateSvgNames();
+		});
+	}
 	
 });
 
